@@ -6,7 +6,7 @@
 /*   By: doalbaco <doalbaco@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/11 17:44:12 by doalbaco          #+#    #+#             */
-/*   Updated: 2022/01/11 20:22:11 by doalbaco         ###   ########.fr       */
+/*   Updated: 2022/01/12 01:55:11 by doalbaco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 #include "initialize_utils.h"
 #include "algorithm.h"
 
-int	execute_instruction(char *str, t_state *state)
+static int	execute_instruction(char *str, t_state *state)
 {
 	if (ft_strcmp(str, "pa") == 0 || ft_strcmp(str, "pa") == 10)
 		pa(state, 0);
@@ -49,7 +49,7 @@ int	execute_instruction(char *str, t_state *state)
 	return (0);
 }
 
-void	check(t_state *state)
+static void	check(t_state *state)
 {
 	char	*str;
 

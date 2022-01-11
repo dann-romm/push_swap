@@ -6,7 +6,7 @@
 /*   By: doalbaco <doalbaco@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/05 22:12:35 by doalbaco          #+#    #+#             */
-/*   Updated: 2022/01/05 22:12:37 by doalbaco         ###   ########.fr       */
+/*   Updated: 2022/01/12 01:53:28 by doalbaco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	ft_strlen(char *str)
 	return (i);
 }
 
-int	ft_atoi(const char *str)
+int	ft_atoi_check_owerflow(const char *str)
 {
 	int	i;
 	int	sign;
@@ -62,9 +62,16 @@ int	ft_atoi(const char *str)
 		sign = (str[i] == '-') * (-1) + (str[i] == '+');
 		i++;
 	}
-	if (str[i] >= '0' && str[i] <= '9')
+	while (str[i] == '0')
+		i++;
+	if (str[i] > '0' && str[i] <= '9')
 		ans = sign * (str[i++] - '0');
 	while (str[i] >= '0' && str[i] <= '9')
-		ans = ans * 10 + sign * (str[i++] - '0');
+	{
+		if ((ans * 10 + sign * (str[i] - '0') > 0) != (ans > 0))
+			return (0);
+		ans = ans * 10 + sign * (str[i] - '0');
+		i++;
+	}
 	return (ans);
 }

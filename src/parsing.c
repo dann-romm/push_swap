@@ -6,7 +6,7 @@
 /*   By: doalbaco <doalbaco@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/05 22:12:30 by doalbaco          #+#    #+#             */
-/*   Updated: 2022/01/10 20:40:57 by doalbaco         ###   ########.fr       */
+/*   Updated: 2022/01/12 02:00:00 by doalbaco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@ static int	*free_args(void **ptr, int is_splitted, int len)
 		i = -1;
 		while (++i < len)
 			free(ptr[i]);
+		free(ptr);
 	}
-	free(ptr);
 	return (0);
 }
 
@@ -41,6 +41,8 @@ static int	validate_numbers(char **av, int len)
 			j++;
 		if (av[i][j] == 0)
 			return (1);
+		while (av[i][j] == '0')
+			j++;
 		while (av[i][j])
 		{
 			if (av[i][j] < '0' || av[i][j] > '9')
@@ -74,9 +76,9 @@ static int	is_repetition(int *args, int len)
 static int	*parse_numbers(char **av, int len)
 {
 	int	*args;
-	int	neg;
-	int	pos;
+	int	num;
 	int	i;
+	int	j;
 
 	args = (int *) malloc(sizeof(int) * len);
 	if (!args)
@@ -84,17 +86,18 @@ static int	*parse_numbers(char **av, int len)
 	i = -1;
 	while (++i < len)
 	{
-		neg = av[i][0] == '-';
-		pos = av[i][0] == '+';
-		if (ft_strlen(av[i]) > (10 + neg + pos))
-			return (free_args((void **) args, 0, 0));
-		if (neg && ft_strlen(av[i]) == 11
-			&& ft_strcmp(av[i], "-2147483648") > 0)
-			return (free_args((void **) args, 0, 0));
-		if (!neg && ft_strlen(av[i]) == (10 + pos)
-			&& ft_strcmp(&av[i][pos], "2147483647") > 0)
-			return (free_args((void **) args, 0, 0));
-		args[i] = ft_atoi(av[i]);
+		num = ft_atoi_check_owerflow(av[i]);
+		if (num == 0)
+		{
+			j = 0;
+			if (av[i][j] == '+' || av[i][j] == '-')
+				j++;
+			while (av[i][j] == '0')
+				j++;
+			if (av[i][j] != 0)
+				return (free_args((void **) args, 1, 0));
+		}
+		args[i] = num;
 	}
 	return (args);
 }
@@ -115,11 +118,11 @@ int	*parsing(int *ac, char **av)
 	if (validate_numbers(av, *ac - 1))
 		return (free_args((void **) av, is_splitted, *ac));
 	args = parse_numbers(av, *ac - 1);
-	if (is_splitted)
-		free_args((void **) av, is_splitted, *ac);
 	if (!args)
 		return (free_args((void **) av, is_splitted, *ac));
+	if (is_splitted)
+		free_args((void **) av, is_splitted, *ac);
 	if (is_repetition(args, *ac - 1))
-		return (free_args((void **) args, 0, 0));
+		return (free_args((void **) args, 1, 0));
 	return (args);
 }
