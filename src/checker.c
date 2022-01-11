@@ -1,86 +1,24 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   checker.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: doalbaco <doalbaco@student.21-school.ru    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/01/11 17:44:12 by doalbaco          #+#    #+#             */
+/*   Updated: 2022/01/11 20:22:11 by doalbaco         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <unistd.h>
 #include <stdlib.h>
 #include "push_swap.h"
-#include "list.h"
 #include "parsing.h"
 #include "utils.h"
 #include "get_next_line.h"
 #include "instructions.h"
-
-#include <stdio.h> // remove
-
-int	display_error(int code)
-{
-	write(1, "Error\n", 6);
-	return (code);
-}
-
-t_state	*free_state(t_state **state)
-{
-	clear(&((*state)->a));
-	clear(&((*state)->b));
-	free(*state);
-	*state = 0;
-	return (0);
-}
-
-t_state	*initialize_state(int *args, int len)
-{
-	t_state	*state;
-	int		i;
-
-	state = (t_state *) malloc(sizeof(t_state));
-	if (!state)
-		return (0);
-	state->a = 0;
-	i = -1;
-	while (++i < len)
-	{
-		if (!push_back(&state->a, args[i]))
-			return (free_state(&state));
-	}
-	state->b = 0;
-	state->len_a = len;
-	state->len_b = 0;
-	return (state);
-}
-
-
-
-
-void	print_state(t_state *state)
-{
-	int a = state->len_a;
-	int b = state->len_b;
-
-	t_stack	*tmp_a = state->a;
-	t_stack	*tmp_b = state->b;
-
-	printf("\nSTATE:\n\n");
-	while (a > b)
-	{
-		printf("%6d\n", tmp_a->value);
-		tmp_a = tmp_a->next;
-		a--;
-	}
-	while (a < b)
-	{
-		printf("%14d\n", tmp_b->value);
-		tmp_b = tmp_b->next;
-		b--;
-	}
-	while (a)
-	{
-		printf("%6d %6d\n", tmp_a->value, tmp_b->value);
-		tmp_a = tmp_a->next;
-		tmp_b = tmp_b->next;
-		a--;
-		b--;
-	}
-	printf("<--A-->_<--B-->\n");
-}
-
-
+#include "initialize_utils.h"
+#include "algorithm.h"
 
 int	execute_instruction(char *str, t_state *state)
 {
@@ -111,31 +49,13 @@ int	execute_instruction(char *str, t_state *state)
 	return (0);
 }
 
-int	is_state_sorted(t_state *state)
-{
-	t_stack	*tmp;
-
-	if (!state->a || state->b)
-		return (0);
-	tmp = state->a->next;
-	while (tmp)
-	{
-		if (tmp->value < tmp->prev->value)
-			return (0);
-		tmp = tmp->next;
-	}
-	return (1);
-}
-
 void	check(t_state *state)
 {
 	char	*str;
 
-	while (1)
+	str = get_next_line(0);
+	while (str && str[0] != '\n')
 	{
-		str = get_next_line(0);
-		if (!str || str[0] == '\n')
-			break ;
 		if (execute_instruction(str, state))
 		{
 			write(2, "Error\n", 6);
@@ -143,6 +63,7 @@ void	check(t_state *state)
 			return ;
 		}
 		free(str);
+		str = get_next_line(0);
 	}
 	if (is_state_sorted(state))
 		write(1, "OK\n", 3);

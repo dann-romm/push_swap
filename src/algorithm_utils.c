@@ -6,7 +6,7 @@
 /*   By: doalbaco <doalbaco@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/05 22:12:06 by doalbaco          #+#    #+#             */
-/*   Updated: 2022/01/10 16:13:52 by doalbaco         ###   ########.fr       */
+/*   Updated: 2022/01/11 18:02:59 by doalbaco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,20 +62,41 @@ int	calc_a_index(t_state *state, int value)
 	return (first_index);
 }
 
+int	is_state_almost_sorted(t_state *state)
+{
+	t_stack	*tmp;
+	int		is_start_found;
 
-// // remove
-// #include <stdlib.h>
-// #include <stdio.h>
-// #include "list.h"
-// int main()
-// {
-// 	t_state *state = malloc(sizeof(t_state));
-// 	state->a = 0;
-// 	state->b = 0;
-// 	push_back(&state->a, 1);
-// 	push_back(&state->a, 3);
-// 	push_back(&state->a, 4);
-// 	push_back(&state->a, 5);
-// 	push_back(&state->b, 2);
-// 	printf("calc_a_index = %d\n", calc_a_index(state, 2));
-// }
+	if (!state->a || state->b)
+		return (0);
+	is_start_found = 0;
+	tmp = state->a;
+	while (tmp)
+	{
+		if (tmp->value < tmp->prev->value)
+		{
+			if (is_start_found)
+				return (0);
+			else
+				is_start_found = 1;
+		}
+		tmp = tmp->next;
+	}
+	return (1);
+}
+
+int	is_state_sorted(t_state *state)
+{
+	t_stack	*tmp;
+
+	if (!state->a || state->b)
+		return (0);
+	tmp = state->a->next;
+	while (tmp)
+	{
+		if (tmp->value < tmp->prev->value)
+			return (0);
+		tmp = tmp->next;
+	}
+	return (1);
+}

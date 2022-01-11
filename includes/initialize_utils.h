@@ -1,25 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   algorithm.h                                        :+:      :+:    :+:   */
+/*   initialize_utils.h                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: doalbaco <doalbaco@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/01/05 22:13:00 by doalbaco          #+#    #+#             */
-/*   Updated: 2022/01/11 18:03:14 by doalbaco         ###   ########.fr       */
+/*   Created: 2022/01/11 17:44:46 by doalbaco          #+#    #+#             */
+/*   Updated: 2022/01/11 17:58:12 by doalbaco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ALGORITHM_H
-# define ALGORITHM_H
+#ifndef INITIALIZE_UTILS_H
+# define INITIALIZE_UTILS_H
 
+# include <stdlib.h>
+# include <unistd.h>
 # include "push_swap.h"
 
-void	algorithm(t_state *state, int *args);
-int		calc_a_index(t_state *state, int value);
-int		find_max_increasing(int *args, t_state *state, int count_max);
-void	execute_operation(t_state *state, t_stack *tmp);
-int		is_state_almost_sorted(t_state *state);
-int		is_state_sorted(t_state *state);
+int		display_error(int code);
+t_state	*free_state(t_state **state);
+t_state	*initialize_state(int *args, int len);
 
 #endif

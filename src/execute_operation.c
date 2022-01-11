@@ -34,7 +34,7 @@ static void	rr_ra_rb(t_state *state, t_stack *tmp)
 {
 	while (tmp->ra > 0 && tmp->rb > 0)
 	{
-		rb(state, 1);
+		rr(state, 1);
 		tmp->ra--;
 		tmp->rb--;
 	}

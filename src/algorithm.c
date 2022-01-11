@@ -6,7 +6,7 @@
 /*   By: doalbaco <doalbaco@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/05 22:12:09 by doalbaco          #+#    #+#             */
-/*   Updated: 2022/01/11 02:21:33 by doalbaco         ###   ########.fr       */
+/*   Updated: 2022/01/11 18:03:59 by doalbaco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,39 +14,6 @@
 #include "algorithm.h"
 #include "instructions.h"
 #include "utils.h"
-
-#include <stdio.h> // remove
-void	print_state(t_state *state)
-{
-	int a = state->len_a;
-	int b = state->len_b;
-
-	t_stack	*tmp_a = state->a;
-	t_stack	*tmp_b = state->b;
-
-	printf("\nSTATE:\n\n");
-	while (a > b)
-	{
-		printf("%6d\n", tmp_a->value);
-		tmp_a = tmp_a->next;
-		a--;
-	}
-	while (a < b)
-	{
-		printf("%14d\n", tmp_b->value);
-		tmp_b = tmp_b->next;
-		b--;
-	}
-	while (a)
-	{
-		printf("%6d %6d\n", tmp_a->value, tmp_b->value);
-		tmp_a = tmp_a->next;
-		tmp_b = tmp_b->next;
-		a--;
-		b--;
-	}
-	printf("<--A-->_<--B-->\n");
-} // remove
 
 static void	fill_stack_b(t_state *state, int *args, int index)
 {
@@ -136,15 +103,18 @@ static void	sort_3(int *args)
 
 void	algorithm(t_state *state, int *args)
 {
+	if (is_state_sorted(state))
+		return ;
 	if (state->len_a == 3)
 	{
 		sort_3(args);
 		return ;
 	}
-	fill_stack_b(state, args, find_max_increasing(args, state, 0));
-	print_state(state);
-	while (state->b)
-		move_to_stack_a(state);
+	if (!is_state_almost_sorted(state))
+	{
+		fill_stack_b(state, args, find_max_increasing(args, state, 0));
+		while (state->b)
+			move_to_stack_a(state);
+	}
 	rotate_stack_a(state);
-	print_state(state);
 }

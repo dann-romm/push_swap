@@ -1,7 +1,7 @@
 CC			= gcc
 RM			= rm -rf
-# CFLAGS		= -Wall -Wextra -Werror
-CFLAGS§		= -fsanitize=address
+CFLAGS		= -Wall -Wextra -Werror
+# CFLAGS		= -fsanitize=address
 
 NAME		= push_swap
 BONUSNAME	= checker
@@ -10,10 +10,10 @@ SRCDIR		= ./src/
 OBJDIR		= ./obj/
 INCDIR		= ./includes/
 
-SRC			= push_swap.c list1.c list2.c instructions1.c instructions2.c instructions3.c algorithm.c algorithm_utils.c execute_operation.c utils.c parsing.c ft_split.c
+SRC			= push_swap.c initialize_utils.c list1.c list2.c instructions1.c instructions2.c instructions3.c algorithm.c algorithm_utils.c execute_operation.c utils.c parsing.c ft_split.c
 OBJ			= $(addprefix $(OBJDIR), $(SRC:.c=.o))
 
-BONUSSRC	= checker.c list1.c list2.c instructions1.c instructions2.c instructions3.c utils.c parsing.c ft_split.c get_next_line.c get_next_line_utils.c
+BONUSSRC	= checker.c initialize_utils.c algorithm_utils.c list1.c list2.c instructions1.c instructions2.c instructions3.c utils.c parsing.c ft_split.c get_next_line.c get_next_line_utils.c
 BONUSOBJ	= $(addprefix $(OBJDIR), $(BONUSSRC:.c=.o))
 
 all: $(NAME)
@@ -32,6 +32,7 @@ clean:
 
 fclean: clean
 	$(RM) $(NAME)
+	$(RM) $(BONUSNAME)
 
 re: fclean all
 
