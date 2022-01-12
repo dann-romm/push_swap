@@ -6,40 +6,13 @@
 /*   By: doalbaco <doalbaco@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/05 22:12:06 by doalbaco          #+#    #+#             */
-/*   Updated: 2022/01/11 18:02:59 by doalbaco         ###   ########.fr       */
+/*   Updated: 2022/01/12 03:05:16 by doalbaco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
-
-int	find_max_increasing(int *args, t_state *state, int count_max)
-{
-	int	i;
-	int	j;
-	int	count_cur;
-	int	value_cur;
-	int	index_max;
-
-	i = -1;
-	while (++i < state->len_a)
-	{
-		j = (i + 1) % state->len_a;
-		count_cur = 1;
-		value_cur = args[i];
-		while (j != i)
-		{
-			if (args[j] > value_cur)
-				value_cur = args[j] + (count_cur++ < 0);
-			j = (j + 1) % state->len_a;
-		}
-		if (count_cur > count_max)
-		{
-			count_max = count_cur;
-			index_max = i;
-		}
-	}
-	return (index_max);
-}
+#include "instructions.h"
+#include "utils.h"
 
 int	calc_a_index(t_state *state, int value)
 {
@@ -99,4 +72,58 @@ int	is_state_sorted(t_state *state)
 		tmp = tmp->next;
 	}
 	return (1);
+}
+
+void	sort_3(t_state *state)
+{
+	t_stack	*tmp;
+
+	tmp = state->a;
+	if (tmp->value < tmp->prev->value && tmp->next->value > tmp->prev->value)
+	{
+		sa(state, 1);
+		ra(state, 1);
+	}
+	else if (tmp->value > tmp->next->value && tmp->value < tmp->prev->value)
+		sa(state, 1);
+	else if (tmp->value < tmp->next->value && tmp->value > tmp->prev->value)
+		rra(state, 1);
+	else if (tmp->value > tmp->prev->value
+		&& tmp->next->value < tmp->prev->value)
+		ra(state, 1);
+	else if (tmp->value > tmp->next->value
+		&& tmp->next->value > tmp->prev->value)
+	{
+		sa(state, 1);
+		rra(state, 1);
+	}
+}
+
+void	sort_5(t_state *state, int *args)
+{
+	int	min_value;
+	int	max_value;
+	int	i;
+
+	min_value = args[0];
+	max_value = args[0];
+	i = -1;
+	while (++i < 5)
+	{
+		max_value = max(max_value, args[i]);
+		min_value = min_value + args[i] - max(min_value, args[i]);
+	}
+	while (state->len_b < 2)
+	{
+		if (state->a->value == min_value || state->a->value == max_value)
+			pb(state, 1);
+		else
+			ra(state, 1);
+	}
+	sort_3(state);
+	if (state->b->value > state->b->prev->value)
+		sb(state, 1);
+	pa(state, 1);
+	pa(state, 1);
+	ra(state, 1);
 }

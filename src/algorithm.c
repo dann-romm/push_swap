@@ -6,7 +6,7 @@
 /*   By: doalbaco <doalbaco@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/05 22:12:09 by doalbaco          #+#    #+#             */
-/*   Updated: 2022/01/11 18:03:59 by doalbaco         ###   ########.fr       */
+/*   Updated: 2022/01/12 03:01:47 by doalbaco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,18 +87,33 @@ static void	rotate_stack_a(t_state *state)
 	}
 }
 
-static void	sort_3(int *args)
+static int	find_max_increasing(int *args, t_state *state, int count_max)
 {
-	if (args[0] < args[2] && args[1] > args[2])
-		write(1, "sa\nra\n", 6);
-	else if (args[0] > args[1] && args[0] < args[2])
-		write(1, "sa\n", 3);
-	else if (args[0] < args[1] && args[0] > args[2])
-		write(1, "rra\n", 4);
-	else if (args[0] > args[2] && args[1] < args[2])
-		write(1, "ra\n", 3);
-	else if (args[0] > args[1] && args[1] < args[2])
-		write(1, "sa\nrra\n", 7);
+	int	i;
+	int	j;
+	int	count_cur;
+	int	value_cur;
+	int	index_max;
+
+	i = -1;
+	while (++i < state->len_a)
+	{
+		j = (i + 1) % state->len_a;
+		count_cur = 1;
+		value_cur = args[i];
+		while (j != i)
+		{
+			if (args[j] > value_cur)
+				value_cur = args[j] + (count_cur++ < 0);
+			j = (j + 1) % state->len_a;
+		}
+		if (count_cur > count_max)
+		{
+			count_max = count_cur;
+			index_max = i;
+		}
+	}
+	return (index_max);
 }
 
 void	algorithm(t_state *state, int *args)
@@ -107,7 +122,12 @@ void	algorithm(t_state *state, int *args)
 		return ;
 	if (state->len_a == 3)
 	{
-		sort_3(args);
+		sort_3(state);
+		return ;
+	}
+	else if (state->len_a == 5)
+	{
+		sort_5(state, args);
 		return ;
 	}
 	if (!is_state_almost_sorted(state))
